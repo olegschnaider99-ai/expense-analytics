@@ -27,7 +27,17 @@ export async function proxy(request: NextRequest) {
 
   // Refreshes the session cookie if needed. Do not remove — routes rely on
   // proxy.ts to keep the session valid instead of refreshing it themselves.
-  await supabase.auth.getClaims();
+  const { data } = await supabase.auth.getClaims();
+  const isAuthenticated = Boolean(data?.claims);
+  const { pathname } = request.nextUrl;
+
+  if (!isAuthenticated && pathname.startsWith("/dashboard")) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  if (isAuthenticated && (pathname === "/login" || pathname === "/register")) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
 
   return response;
 }

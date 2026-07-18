@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 
 try {
@@ -6,4 +7,10 @@ try {
   // .env.local is optional in CI, where secrets come from the environment.
 }
 
-export default defineConfig({});
+export default defineConfig({
+  resolve: {
+    alias: {
+      "@": fileURLToPath(new URL(".", import.meta.url)),
+    },
+  },
+});
