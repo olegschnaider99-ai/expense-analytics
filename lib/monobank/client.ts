@@ -20,6 +20,7 @@ export type MonobankAccount = {
 export type MonobankClientInfo = {
   clientId: string;
   name: string;
+  webHookUrl?: string;
   accounts: MonobankAccount[];
 };
 
