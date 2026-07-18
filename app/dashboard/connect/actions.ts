@@ -112,6 +112,8 @@ export async function connectMonobank(
     // means the dashboard starts sparser than it could. Not fatal here.
   }
 
+  await admin.rpc("process_aggregation_queue");
+
   await supabase
     .from("monobank_connections")
     .update({ connection_state: "Connected" })

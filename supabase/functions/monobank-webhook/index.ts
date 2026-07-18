@@ -71,6 +71,15 @@ export default {
       return new Response("rejected", { status: 401 });
     }
 
+    // Drain the aggregation queue (ingest_transaction already enqueued this
+    // user) after acking — near-immediate recompute, without making
+    // Monobank wait on it. pg_cron's schedule is the safety net if this
+    // background call is dropped.
+    // deno-lint-ignore no-explicit-any
+    (globalThis as any).EdgeRuntime?.waitUntil(
+      ctx.supabaseAdmin.rpc("process_aggregation_queue"),
+    );
+
     return new Response("ok", { status: 200 });
   }),
 };

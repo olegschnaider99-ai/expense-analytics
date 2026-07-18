@@ -121,6 +121,8 @@ export async function reconnectMonobank(
     // isn't fatal to reconnecting itself.
   }
 
+  await admin.rpc("process_aggregation_queue");
+
   await supabase
     .from("monobank_connections")
     .update({ connection_state: "Connected" })
