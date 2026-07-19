@@ -14,9 +14,10 @@ export function AiPanel() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
+  const [quotaExceeded, setQuotaExceeded] = useState(false);
 
   async function ask(question: string) {
-    if (!question.trim() || pending) return;
+    if (!question.trim() || pending || quotaExceeded) return;
 
     const nextMessages: Message[] = [...messages, { role: "user", content: question }];
     setMessages(nextMessages);
@@ -30,6 +31,13 @@ export function AiPanel() {
         body: JSON.stringify({ question, history: messages }),
       });
       const data = await response.json();
+
+      if (response.status === 429 && data.error === "quota_exceeded") {
+        setQuotaExceeded(true);
+        setMessages(nextMessages);
+        return;
+      }
+
       const answer =
         response.ok && data.answer
           ? data.answer
@@ -93,28 +101,42 @@ export function AiPanel() {
         )}
       </div>
 
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          ask(input);
-        }}
-        className="flex gap-2 border-t p-3"
-      >
-        <input
-          value={input}
-          onChange={(event) => setInput(event.target.value)}
-          disabled={pending}
-          placeholder="Ask a question…"
-          className="flex-1 rounded border px-3 py-2 text-sm disabled:opacity-50"
-        />
-        <button
-          type="submit"
-          disabled={pending}
-          className="rounded bg-black px-3 py-2 text-sm text-white disabled:opacity-50"
+      {quotaExceeded ? (
+        <div className="border-t bg-amber-50 p-3 text-sm text-amber-900">
+          You&apos;ve used today&apos;s free questions.
+          <button
+            type="button"
+            disabled
+            title="Coming soon"
+            className="mt-2 block w-full rounded bg-black px-3 py-2 text-center text-sm text-white opacity-50"
+          >
+            Upgrade to premium — coming soon
+          </button>
+        </div>
+      ) : (
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            ask(input);
+          }}
+          className="flex gap-2 border-t p-3"
         >
-          Send
-        </button>
-      </form>
+          <input
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+            disabled={pending}
+            placeholder="Ask a question…"
+            className="flex-1 rounded border px-3 py-2 text-sm disabled:opacity-50"
+          />
+          <button
+            type="submit"
+            disabled={pending}
+            className="rounded bg-black px-3 py-2 text-sm text-white disabled:opacity-50"
+          >
+            Send
+          </button>
+        </form>
+      )}
     </aside>
   );
 }
