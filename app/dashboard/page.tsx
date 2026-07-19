@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getVerifiedUser } from "@/lib/supabase/server";
-import { signOut } from "@/lib/supabase/actions";
 import { getDashboardData } from "@/lib/dashboard/data";
+import { Sidebar } from "@/components/dashboard/Sidebar";
 import { ConnectionBanner } from "@/components/dashboard/ConnectionBanner";
-import { CategoryChart } from "@/components/dashboard/CategoryChart";
+import { MetricCards } from "@/components/dashboard/MetricCards";
+import { CategoryDonut } from "@/components/dashboard/CategoryDonut";
+import { DailyTrendChart } from "@/components/dashboard/DailyTrendChart";
+import { TopExpenses } from "@/components/dashboard/TopExpenses";
 import { RecentTransactions } from "@/components/dashboard/RecentTransactions";
 import { JarList } from "@/components/dashboard/JarList";
 import { AiPanel } from "@/components/dashboard/AiPanel";
@@ -15,7 +18,7 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  const { connection, aggregates, recentTransactions, hasFullHistoryWindow } =
+  const { connection, recentTransactions, summary, hasFullHistoryWindow } =
     await getDashboardData(user.sub as string);
 
   if (!connection) {
@@ -36,40 +39,47 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="flex h-full min-h-screen flex-col md:flex-row">
+    <div className="flex h-full min-h-screen flex-col bg-gray-50 md:flex-row dark:bg-black">
+      <Sidebar />
+
       <main className="flex flex-1 flex-col gap-6 overflow-y-auto p-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-medium">Витрати</h1>
-          <form action={signOut}>
-            <button type="submit" className="text-sm text-gray-500 underline">
-              Вийти
-            </button>
-          </form>
+          <h1 className="text-xl font-semibold">Дашборд</h1>
+          <span
+            title="Скоро"
+            className="flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700 dark:border-amber-900/40 dark:bg-amber-950/40 dark:text-amber-400"
+          >
+            👑 Premium
+          </span>
         </div>
 
         <ConnectionBanner connection={connection} />
 
-        <section className="flex flex-col gap-3">
-          <h2 className="text-sm font-medium text-gray-700">
-            Цей тиждень за категоріями
-          </h2>
-          <CategoryChart
-            aggregates={aggregates}
+        <MetricCards summary={summary} />
+
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <CategoryDonut
+            categoryTotals={summary.categoryTotals}
+            spent={summary.spent}
             hasFullHistoryWindow={hasFullHistoryWindow}
           />
-        </section>
+          <DailyTrendChart
+            dailyTotals={summary.dailyTotals}
+            hasFullHistoryWindow={hasFullHistoryWindow}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <TopExpenses expenses={summary.topExpenses} />
+          <RecentTransactions transactions={recentTransactions} />
+        </div>
 
         <JarList jars={connection.other_jars} />
-
-        <section className="flex flex-col gap-3">
-          <h2 className="text-sm font-medium text-gray-700">
-            Останні транзакції
-          </h2>
-          <RecentTransactions transactions={recentTransactions} />
-        </section>
       </main>
 
-      <AiPanel />
+      <div id="ai-panel" className="contents">
+        <AiPanel />
+      </div>
     </div>
   );
 }
