@@ -92,7 +92,7 @@ describe("answerQuestion (live OpenAI + Supabase)", () => {
         "What category did I spend the most on this week, and how much?",
         [],
       );
-      expect(answer.toLowerCase()).toContain("fuel");
+      expect(answer.toLowerCase()).toContain("пальне");
       expect(answer).toContain("777");
     },
     30000,

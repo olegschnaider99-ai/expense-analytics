@@ -12,14 +12,14 @@ export async function login(
   const password = String(formData.get("password") ?? "");
 
   if (!email || !password) {
-    return { error: "Enter an email and password." };
+    return { error: "Введи email і пароль." };
   }
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    return { error: "Invalid email or password." };
+    return { error: "Невірний email або пароль." };
   }
 
   redirect("/dashboard");

@@ -19,14 +19,14 @@ describe("AiPanel", () => {
     );
 
     render(<AiPanel />);
-    fireEvent.click(screen.getByText("What did I spend the most on last week?"));
+    fireEvent.click(screen.getByText("На що я найбільше витратив(-ла) минулого тижня?"));
 
     await waitFor(() => {
-      expect(screen.getByText(/used today's free questions/i)).toBeInTheDocument();
+      expect(screen.getByText(/використав\(-ла\) сьогоднішні безкоштовні запитання/i)).toBeInTheDocument();
     });
 
-    expect(screen.getByRole("button", { name: /upgrade to premium/i })).toBeDisabled();
-    expect(screen.queryByPlaceholderText("Ask a question…")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /перейти на преміум/i })).toBeDisabled();
+    expect(screen.queryByPlaceholderText("Постав запитання…")).not.toBeInTheDocument();
   });
 
   it("shows the assistant's answer on a normal successful response", async () => {
@@ -40,11 +40,11 @@ describe("AiPanel", () => {
     );
 
     render(<AiPanel />);
-    fireEvent.click(screen.getByText("Any unusual purchases recently?"));
+    fireEvent.click(screen.getByText("Чи були нещодавно якісь незвичні покупки?"));
 
     await waitFor(() => {
       expect(screen.getByText("You spent 500 UAH on Groceries.")).toBeInTheDocument();
     });
-    expect(screen.getByPlaceholderText("Ask a question…")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Постав запитання…")).toBeInTheDocument();
   });
 });

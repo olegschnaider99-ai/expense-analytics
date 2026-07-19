@@ -19,8 +19,8 @@ export function CategoryChart({
     return (
       <div className="rounded border border-dashed p-6 text-center text-sm text-gray-500">
         {hasFullHistoryWindow
-          ? "No spending recorded for this period yet."
-          : "Still gathering history — your first month of spending will show up here."}
+          ? "Витрат за цей період поки немає."
+          : "Ще збираємо історію — тут з'явиться перший місяць твоїх витрат."}
       </div>
     );
   }
@@ -31,7 +31,7 @@ export function CategoryChart({
     <div className="flex flex-col gap-3">
       {!hasFullHistoryWindow ? (
         <p className="text-xs text-gray-500">
-          Still gathering history — trends will fill in over your first month.
+          Ще збираємо історію — тенденції з'являться протягом першого місяця.
         </p>
       ) : null}
       {aggregates.map((row) => (
@@ -42,16 +42,16 @@ export function CategoryChart({
               {row.is_anomaly ? (
                 <span
                   className="ml-2 rounded bg-amber-100 px-1.5 py-0.5 text-xs text-amber-800"
-                  title="Contains an unusually large purchase"
+                  title="Містить незвично велику покупку"
                 >
-                  unusual
+                  незвично
                 </span>
               ) : null}
             </span>
             <span className="tabular-nums text-gray-700">
               {formatUah(row.total)}
               {row.pct_change === null ? (
-                <span className="ml-2 text-xs text-gray-400">new category</span>
+                <span className="ml-2 text-xs text-gray-400">нова категорія</span>
               ) : (
                 <span
                   className={`ml-2 text-xs ${row.pct_change > 0 ? "text-red-600" : "text-green-600"}`}

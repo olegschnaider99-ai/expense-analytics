@@ -12,13 +12,13 @@ export default function RegisterPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-xl font-medium">Create an account</h1>
+      <h1 className="text-xl font-medium">Створити акаунт</h1>
 
       <GoogleSignInButton />
 
       <div className="flex items-center gap-2 text-xs text-gray-400">
         <div className="h-px flex-1 bg-gray-200" />
-        or
+        або
         <div className="h-px flex-1 bg-gray-200" />
       </div>
 
@@ -35,7 +35,7 @@ export default function RegisterPage() {
         </label>
 
         <label className="flex flex-col gap-1 text-sm">
-          Password
+          Пароль
           <input
             type="password"
             name="password"
@@ -57,13 +57,13 @@ export default function RegisterPage() {
           disabled={pending}
           className="rounded bg-black px-3 py-2 text-white disabled:opacity-50"
         >
-          {pending ? "Creating account…" : "Create account"}
+          {pending ? "Створюємо акаунт…" : "Створити акаунт"}
         </button>
 
         <p className="text-sm text-gray-600">
-          Already have an account?{" "}
+          Вже маєш акаунт?{" "}
           <Link href="/login" className="underline">
-            Log in
+            Увійти
           </Link>
         </p>
       </form>

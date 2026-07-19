@@ -100,7 +100,7 @@ describe("createTools", () => {
     const result = await getCategoryTotals.execute({});
     const parsed = JSON.parse(result as string);
     expect(Array.isArray(parsed)).toBe(true);
-    expect(parsed.some((row: { category: string }) => row.category === "Groceries")).toBe(true);
+    expect(parsed.some((row: { category: string }) => row.category === "Продукти")).toBe(true);
   });
 
   it("compare_periods sums two arbitrary date ranges", async () => {

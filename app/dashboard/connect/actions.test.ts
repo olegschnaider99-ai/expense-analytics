@@ -90,7 +90,7 @@ afterAll(async () => {
 describe("connectMonobank", () => {
   it("rejects an empty token without calling Monobank", async () => {
     const result = await connectMonobank({ error: null }, new FormData());
-    expect(result.error).toMatch(/enter your monobank/i);
+    expect(result.error).toMatch(/введи свій особистий токен/i);
   });
 
   it("creates a connection, stores the token in Vault, and backfills fixture transactions", async () => {

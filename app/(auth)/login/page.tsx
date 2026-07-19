@@ -13,13 +13,13 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-xl font-medium">Log in</h1>
+      <h1 className="text-xl font-medium">Увійти</h1>
 
       <GoogleSignInButton />
 
       <div className="flex items-center gap-2 text-xs text-gray-400">
         <div className="h-px flex-1 bg-gray-200" />
-        or
+        або
         <div className="h-px flex-1 bg-gray-200" />
       </div>
 
@@ -36,7 +36,7 @@ export default function LoginPage() {
         </label>
 
         <label className="flex flex-col gap-1 text-sm">
-          Password
+          Пароль
           <input
             type="password"
             name="password"
@@ -57,13 +57,13 @@ export default function LoginPage() {
           disabled={pending}
           className="rounded bg-black px-3 py-2 text-white disabled:opacity-50"
         >
-          {pending ? "Logging in…" : "Log in"}
+          {pending ? "Входимо…" : "Увійти"}
         </button>
 
         <p className="text-sm text-gray-600">
-          Don&apos;t have an account?{" "}
+          Ще немає акаунта?{" "}
           <Link href="/register" className="underline">
-            Create one
+            Зареєструватися
           </Link>
         </p>
       </form>

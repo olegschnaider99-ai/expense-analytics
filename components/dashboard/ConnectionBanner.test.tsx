@@ -34,25 +34,25 @@ describe("ConnectionBanner", () => {
         })}
       />,
     );
-    expect(screen.getByText(/gap in your history/i)).toBeInTheDocument();
+    expect(screen.getByText(/у твоїй історії є пропуск/i)).toBeInTheDocument();
   });
 
   it("shows a non-actionable notice for Degraded", () => {
     render(<ConnectionBanner connection={connection({ connection_state: "Degraded" })} />);
-    expect(screen.getByText(/having trouble syncing/i)).toBeInTheDocument();
+    expect(screen.getByText(/виникають проблеми із синхронізацією/i)).toBeInTheDocument();
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });
 
   it("shows a progress notice for Backfilling", () => {
     render(<ConnectionBanner connection={connection({ connection_state: "Backfilling" })} />);
-    expect(screen.getByText(/re-syncing/i)).toBeInTheDocument();
+    expect(screen.getByText(/синхронізуємо історію/i)).toBeInTheDocument();
   });
 
   it("shows an actionable reconnect link for NeedsReconnect", () => {
     render(
       <ConnectionBanner connection={connection({ connection_state: "NeedsReconnect" })} />,
     );
-    expect(screen.getByRole("link", { name: /reconnect/i })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /перепідключити/i })).toHaveAttribute(
       "href",
       "/dashboard/reconnect",
     );

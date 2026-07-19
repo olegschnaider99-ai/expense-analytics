@@ -81,7 +81,7 @@ describe("recompute_user_aggregates", () => {
       .from("aggregates")
       .select("*")
       .eq("user_id", userId)
-      .eq("category", "Groceries")
+      .eq("category", "Продукти")
       .single();
 
     expect(Number(aggregate!.total)).toBe(100);
@@ -99,7 +99,7 @@ describe("recompute_user_aggregates", () => {
       .from("aggregates")
       .select("pct_change")
       .eq("user_id", userId)
-      .eq("category", "Fuel")
+      .eq("category", "Пальне")
       .single();
 
     expect(aggregate!.pct_change).toBeNull();

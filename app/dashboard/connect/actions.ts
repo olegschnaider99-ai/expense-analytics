@@ -27,13 +27,13 @@ export async function connectMonobank(
 ): Promise<ConnectFormState> {
   const token = String(formData.get("token") ?? "").trim();
   if (!token) {
-    return { error: "Enter your Monobank personal token." };
+    return { error: "Введи свій особистий токен Monobank." };
   }
 
   const supabase = await createClient();
   const { data: authData, error: authError } = await supabase.auth.getClaims();
   if (authError || !authData) {
-    return { error: "Your session expired. Log in again." };
+    return { error: "Сесія закінчилась. Увійди знову." };
   }
   const userId = authData.claims.sub as string;
 
@@ -42,9 +42,9 @@ export async function connectMonobank(
     clientInfo = await getClientInfo(token);
   } catch (err) {
     if (err instanceof MonobankApiError && err.status === 403) {
-      return { error: "That token was rejected by Monobank. Check it and try again." };
+      return { error: "Monobank відхилив цей токен. Перевір і спробуй ще раз." };
     }
-    return { error: "Couldn't reach Monobank. Try again in a moment." };
+    return { error: "Не вдалося зв'язатися з Monobank. Спробуй трохи пізніше." };
   }
 
   const { primary, isPrimaryCurrency } = selectPrimaryAccount(clientInfo.accounts);
@@ -61,7 +61,7 @@ export async function connectMonobank(
     { p_token: token },
   );
   if (secretError || !secretId) {
-    return { error: "Couldn't securely store your token. Try again." };
+    return { error: "Не вдалося безпечно зберегти токен. Спробуй ще раз." };
   }
 
   const webhookSecretPath = generateWebhookSecretPath();
@@ -81,7 +81,7 @@ export async function connectMonobank(
     .single();
 
   if (insertError || !connection) {
-    return { error: "Couldn't save the connection. Try again." };
+    return { error: "Не вдалося зберегти підключення. Спробуй ще раз." };
   }
 
   try {

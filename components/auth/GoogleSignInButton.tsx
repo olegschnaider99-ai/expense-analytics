@@ -16,7 +16,7 @@ export function GoogleSignInButton() {
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
     if (error) {
-      setError("Couldn't start Google sign-in. Try again.");
+      setError("Не вдалося почати вхід через Google. Спробуй ще раз.");
       setPending(false);
     }
     // On success the browser navigates away to Google, so no further
@@ -31,7 +31,7 @@ export function GoogleSignInButton() {
         disabled={pending}
         className="rounded border px-3 py-2 text-sm disabled:opacity-50"
       >
-        {pending ? "Redirecting…" : "Continue with Google"}
+        {pending ? "Перенаправляємо…" : "Продовжити через Google"}
       </button>
       {error ? (
         <p role="alert" className="text-sm text-red-600">

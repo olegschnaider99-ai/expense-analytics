@@ -66,7 +66,7 @@ describe("register action", () => {
       { error: null },
       formData({ email: "no-password@example.com" }),
     );
-    expect(result.error).toMatch(/email and password/i);
+    expect(result.error).toMatch(/email.*пароль/i);
   });
 
   it("creates a new user and redirects to /dashboard", async () => {
@@ -121,7 +121,7 @@ describe("login action", () => {
       { error: null },
       formData({ email, password: "wrong-password" }),
     );
-    expect(result.error).toBe("Invalid email or password.");
+    expect(result.error).toBe("Невірний email або пароль.");
   });
 
   it("logs in with correct credentials and redirects to /dashboard", async () => {

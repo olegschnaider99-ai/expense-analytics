@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Expense Analytics",
-  description: "Monobank expense analytics with an AI-powered spending assistant.",
+  title: "Аналітика витрат",
+  description: "Аналітика витрат з Monobank та AI-асистент по твоїх витратах.",
 };
 
 export default function RootLayout({
@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="uk"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>

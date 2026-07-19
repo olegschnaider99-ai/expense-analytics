@@ -6,12 +6,12 @@ import { CategoryChart } from "./CategoryChart";
 describe("CategoryChart", () => {
   it("shows a sparse-history message when there's no data yet and history is still filling in", () => {
     render(<CategoryChart aggregates={[]} hasFullHistoryWindow={false} />);
-    expect(screen.getByText(/still gathering history/i)).toBeInTheDocument();
+    expect(screen.getByText(/ще збираємо історію/i)).toBeInTheDocument();
   });
 
   it("shows a plain empty message once history is complete but there's genuinely no spending", () => {
     render(<CategoryChart aggregates={[]} hasFullHistoryWindow={true} />);
-    expect(screen.getByText(/no spending recorded/i)).toBeInTheDocument();
+    expect(screen.getByText(/витрат за цей період поки немає/i)).toBeInTheDocument();
   });
 
   it("labels a category with no prior-period baseline as new rather than a percentage", () => {
@@ -30,7 +30,7 @@ describe("CategoryChart", () => {
         hasFullHistoryWindow={true}
       />,
     );
-    expect(screen.getByText(/new category/i)).toBeInTheDocument();
+    expect(screen.getByText(/нова категорія/i)).toBeInTheDocument();
   });
 
   it("marks a category containing an anomalous transaction as unusual", () => {
@@ -49,6 +49,6 @@ describe("CategoryChart", () => {
         hasFullHistoryWindow={true}
       />,
     );
-    expect(screen.getByText("unusual")).toBeInTheDocument();
+    expect(screen.getByText("незвично")).toBeInTheDocument();
   });
 });
