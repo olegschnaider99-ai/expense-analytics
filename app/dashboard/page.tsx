@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getVerifiedUser } from "@/lib/supabase/server";
 import { getDashboardData } from "@/lib/dashboard/data";
+import { activatePremium } from "@/app/dashboard/premium/actions";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { ConnectionBanner } from "@/components/dashboard/ConnectionBanner";
 import { MetricCards } from "@/components/dashboard/MetricCards";
@@ -18,7 +19,7 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  const { connection, recentTransactions, summary, hasFullHistoryWindow } =
+  const { connection, recentTransactions, summary, hasFullHistoryWindow, isPremium } =
     await getDashboardData(user.sub as string);
 
   if (!connection) {
@@ -45,12 +46,26 @@ export default async function DashboardPage() {
       <main className="flex flex-1 flex-col gap-6 overflow-y-auto p-6">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-semibold">Дашборд</h1>
-          <span
-            title="Скоро"
-            className="flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700 dark:border-amber-900/40 dark:bg-amber-950/40 dark:text-amber-400"
-          >
-            👑 Premium
-          </span>
+          {isPremium ? (
+            <span className="flex items-center gap-1 rounded-full border border-amber-300 bg-gradient-to-r from-amber-100 to-yellow-100 px-3 py-1 text-xs font-medium text-amber-800 dark:border-amber-800 dark:from-amber-950/60 dark:to-yellow-950/60 dark:text-amber-400">
+              👑 Premium активний
+            </span>
+          ) : (
+            <form
+              action={async () => {
+                "use server";
+                await activatePremium();
+              }}
+            >
+              <button
+                type="submit"
+                title="Тестова активація без оплати"
+                className="flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700 hover:bg-amber-100 dark:border-amber-900/40 dark:bg-amber-950/40 dark:text-amber-400 dark:hover:bg-amber-950/70"
+              >
+                👑 Активувати Premium
+              </button>
+            </form>
+          )}
         </div>
 
         <ConnectionBanner connection={connection} />

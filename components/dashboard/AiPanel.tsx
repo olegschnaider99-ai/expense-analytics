@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { activatePremium } from "@/app/dashboard/premium/actions";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -41,7 +42,22 @@ export function AiPanel() {
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
   const [quotaExceeded, setQuotaExceeded] = useState(false);
+  const [activatingPremium, setActivatingPremium] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  async function handleActivatePremium() {
+    setActivatingPremium(true);
+    try {
+      const result = await activatePremium();
+      if (result.ok) {
+        // Full reload so the header badge and the AI quota check (both
+        // server-derived) pick up the new premium status too.
+        window.location.reload();
+      }
+    } finally {
+      setActivatingPremium(false);
+    }
+  }
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -154,11 +170,11 @@ export function AiPanel() {
           Ти використав(-ла) сьогоднішні безкоштовні запитання.
           <button
             type="button"
-            disabled
-            title="Скоро"
-            className="mt-2 block w-full rounded-xl bg-black px-3 py-2 text-center text-sm text-white opacity-50 dark:bg-white dark:text-black"
+            onClick={handleActivatePremium}
+            disabled={activatingPremium}
+            className="mt-2 block w-full rounded-xl bg-black px-3 py-2 text-center text-sm text-white disabled:opacity-50 dark:bg-white dark:text-black"
           >
-            Перейти на преміум — скоро
+            {activatingPremium ? "Активуємо…" : "👑 Активувати Premium (тест)"}
           </button>
         </div>
       ) : (

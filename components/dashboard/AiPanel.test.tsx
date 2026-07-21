@@ -8,7 +8,7 @@ describe("AiPanel", () => {
     vi.unstubAllGlobals();
   });
 
-  it("shows the disabled upgrade affordance instead of the input once quota is exceeded", async () => {
+  it("shows the premium activation affordance instead of the input once quota is exceeded", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -25,7 +25,7 @@ describe("AiPanel", () => {
       expect(screen.getByText(/використав\(-ла\) сьогоднішні безкоштовні запитання/i)).toBeInTheDocument();
     });
 
-    expect(screen.getByRole("button", { name: /перейти на преміум/i })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /активувати premium/i })).not.toBeDisabled();
     expect(screen.queryByPlaceholderText("Постав запитання…")).not.toBeInTheDocument();
   });
 

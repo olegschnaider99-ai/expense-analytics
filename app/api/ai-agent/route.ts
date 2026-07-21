@@ -25,29 +25,40 @@ export async function POST(request: Request) {
 
   const admin = createAdminClient();
 
-  // TODO: premium users bypass this cap once WayForPay billing exists.
-  const { data: reserved, error: reserveError } = await admin.rpc("reserve_ai_quota", {
-    p_user_id: userId,
-    p_daily_limit: dailyQuota,
-  });
-  if (reserveError) {
-    return NextResponse.json(
-      { error: "the assistant couldn't answer that" },
-      { status: 502 },
-    );
-  }
-  if (!reserved) {
-    return NextResponse.json({ error: "quota_exceeded" }, { status: 429 });
+  // Premium is a test-only self-service flag for now (no WayForPay billing
+  // yet) — see app/dashboard/premium/actions.ts. Premium users skip the
+  // daily quota entirely.
+  const { data: settings } = await admin
+    .from("user_settings")
+    .select("is_premium")
+    .eq("user_id", userId)
+    .maybeSingle();
+  const isPremium = settings?.is_premium ?? false;
+
+  if (!isPremium) {
+    const { data: reserved, error: reserveError } = await admin.rpc("reserve_ai_quota", {
+      p_user_id: userId,
+      p_daily_limit: dailyQuota,
+    });
+    if (reserveError) {
+      return NextResponse.json(
+        { error: "the assistant couldn't answer that" },
+        { status: 502 },
+      );
+    }
+    if (!reserved) {
+      return NextResponse.json({ error: "quota_exceeded" }, { status: 429 });
+    }
   }
 
   const supabase = await createClient();
 
   try {
     const answer = await answerQuestion(supabase, question, body.history ?? []);
-    await admin.rpc("complete_ai_quota", { p_user_id: userId });
+    if (!isPremium) await admin.rpc("complete_ai_quota", { p_user_id: userId });
     return NextResponse.json({ answer });
   } catch {
-    await admin.rpc("release_ai_quota", { p_user_id: userId });
+    if (!isPremium) await admin.rpc("release_ai_quota", { p_user_id: userId });
     return NextResponse.json(
       { error: "the assistant couldn't answer that" },
       { status: 502 },

@@ -66,6 +66,7 @@ export type DashboardData = {
   summary: ThirtyDaySummary;
   /** True once >=31 days have passed since the connection was created. */
   hasFullHistoryWindow: boolean;
+  isPremium: boolean;
 };
 
 const THIRTY_ONE_DAYS_MS = 31 * 24 * 60 * 60 * 1000;
@@ -174,6 +175,13 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
     .limit(1)
     .maybeSingle();
 
+  const { data: settings } = await supabase
+    .from("user_settings")
+    .select("is_premium")
+    .eq("user_id", userId)
+    .maybeSingle();
+  const isPremium = settings?.is_premium ?? false;
+
   if (!connection) {
     return {
       connection: null,
@@ -181,6 +189,7 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
       recentTransactions: [],
       summary: EMPTY_SUMMARY,
       hasFullHistoryWindow: false,
+      isPremium,
     };
   }
 
@@ -217,5 +226,6 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
       (categorizedTransactions ?? []) as CategorizedTransactionRow[],
     ),
     hasFullHistoryWindow,
+    isPremium,
   };
 }
